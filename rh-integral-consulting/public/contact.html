@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Consultoría Integral en Recursos Humanos | Contact</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/custom/rest-client.js"></script>
+<script type="text/javascript" src="js/custom/utils.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  toggleLoading(false);
+
+  function isValidContactform(formObj) {
+    var rv = true;
+    var args = [];
+    if (formObj.name.trim().length == 0) args[args.length] = 'Nombre y apellido';
+    if (formObj.email.trim().length == 0) args[args.length] = 'E-mail';
+    if (formObj.message.trim().length == 0) args[args.length] = 'Mensaje';
+    if (args.length > 0) {
+      displayStatusMessgeRequired(args);
+      rv = false;
+    }
+    return rv;
+  }
+
+  function submitMessage() {
+    var formObj = serializeObject($("#contactform"));
+    if (!isValidContactform(formObj) || !isValidEmail(formObj)) return;
+
+    toggleLoading(true);
+    var message = { 
+      contact: formObj.name,
+      email: formObj.email,
+      subject: formObj.subject,
+      message: formObj.message,
+      date: new Date()
+    };
+
+    $.when( addMessage(message) ).then(
+      function( newMessage ) {
+        console.log("add message - success response");
+        displayStatusEndFlow( $("#contactform"), 'Mensaje enviado exitosamente, lo contactamos en breve.' );
+        toggleLoading(false);
+      },
+      function( failure ) {
+        console.error("add message - failure response::" + failure);
+        displayStatusEndFlow( $("#contactform"), 'En este momento no es posible enviar el mensaje, por favor intente mas tarde.' );
+        toggleLoading(false);
+      },
+      function( notify ) {
+        console.warn("add message - notify occurred::" + notify);
+        toggleLoading(false);
+      }
+    );
+  }
+
+  $( "input:button[name='send']" ).click( function( event ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    submitMessage();
+  });  
+});
+</script>
+</head>
+<body>
+<div class="main">
+  <div class="header_resize">
+    <div class="header">
+      <div class="logo"><a href="#"><img src="images/coollogo_com-149121937.png" width="338" height="70" border="0" alt="" /></a></div>
+      <div class="menu">
+        <ul>
+          <li><a href="index.html"><span>Inicio</span></a></li>
+          <li><a href="employers.html"><span>Empleadores </span></a></li>
+          <li><a href="job-seekers.html"><span> Postulantes </span></a></li>
+          <li><a href="contact.html" class="active"><span> Contacto</span></a></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="header_blog2">
+    <div class="header">
+      <h2>Contacto</h2>
+      <p>Si necesita personal nuevo y no posee tiempo, no dude en contactarnos, en 36 horas conseguimos el candidato adecuado.</p>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+  <div class="body">
+    <div class="body_resize">
+      <div class="left">
+        <h2>Envíenos un e-mail</h2>
+        <p><span><em>Consulta rápida</em></span></p>
+        <p>Complete los siguientes datos del formulario y le respondemos en breve.</p>
+        <form action="#" method="post" id="contactform">
+          <ol>
+            <li>
+              <label for="status"></label>
+            </li>
+            <li>
+              <label for="name"><span class="red">*</span> Nombre y apellido:</label>
+              <input id="name" name="name" class="text" />
+            </li>
+            <li>
+              <label for="email"><span class="red">*</span> E-mail:</label>
+              <input id="email" name="email" class="text" />
+            </li>
+            <li>
+              <label for="subject">Asunto:</label>
+              <input id="subject" name="subject" class="text" />
+            </li>
+            <li>
+              <label for="message"><span class="red">*</span> Mensaje:</label>
+              <textarea id="message" name="message" rows="6" cols="50"></textarea>
+            </li>
+            <li class="buttons">
+              <div id="loading"><img id="loading-image" src="images/loading_main.gif" alt="Cargando..." /></div>
+              <input type="button" name="send" value="Enviar" onclick=""/>
+              <div class="clr"></div>
+            </li>
+          </ol>
+        </form>
+      </div>
+      <div class="right">
+        <p><a href="#">Ventas</a><br />
+          Para solicitud de servicios de reclutamiento.<br />
+          <strong>Teléfono: (+54 9 0351) 15 573-7474.<br />
+          E-mail: ventas@rhintegralconsulting.com.ar<br />
+          Horarios: Lúnes a Viernes de 8am a 5pm.</strong></p>
+        <p><a href="#">Atención al cliente</a><br />
+          Soporte para servicios de búsqueda y selección que se encuentran en curso.<br />
+          <strong>Teléfono: (+54 9 0351) 15 760-3738.<br />
+          E-mail: atencion@rhintegralconsulting.com.ar<br />
+          Horarios: Lúnes a Viernes de 9am a 6pm.</strong></p>
+        <p><a href="#">Ubicación</a><br />
+          <strong>Dirección: Av. Duate Quiróz 3053.<br />
+          Localidad: Córdoba capital.<br />
+          Código postal: 5000.<br />
+          Horarios: Lunes y Jueves de 6pm a 8pm.</strong></p>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="footer">
+    <div class="footer_resize">
+      <p class="leftt">© Copyright www.rhintegralconsulting.com.ar . Todos los derechos reservados.<br />
+      <p class="right"><a href="index.html">Inicio</a> | <a href="employers.html">Empleadores</a>| <a href="job-seekers.html">Postulantes</a>| <a href="contact.html">Contacto</a> </p></p>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+</div>
+</body>
+</html>

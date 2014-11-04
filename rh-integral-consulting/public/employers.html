@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Consultoría Integral en Recursos Humanos | Portfolio</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/custom/rest-client.js"></script>
+<script type="text/javascript" src="js/custom/utils.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  toggleLoading(false);
+
+  function isValidOfferform(formObj) {
+    var rv = true;
+    var args = [];
+    if (formObj.name.trim().length == 0) args[args.length] = 'Nombre y apellido';
+    if (formObj.email.trim().length == 0) args[args.length] = 'E-mail';
+    if (formObj.positions.trim().length == 0) args[args.length] = 'Posiciones abiertas';
+    if (args.length > 0) {
+      displayStatusMessgeRequired(args);
+      rv = false;
+    }
+    return rv;
+  }
+
+  function submitOffer() {
+    var formObj = serializeObject($("#offerform"));
+    if (!isValidOfferform(formObj) || !isValidEmail(formObj)) return;
+
+    toggleLoading(true);
+    var offer = { 
+      employerRefCode: null, 
+      position: formObj.positions,
+      date: new Date(),
+      reference: null,
+      jobType: null,
+      begin: null,
+      duration: null,
+      location: null,
+      requestType: "Por e-mail",
+      contact: "Selectores",
+      telphone: "(+54 9 0351) 15 393-3182",
+      email: "atencion@rhintegralconsulting.com.ar",
+      description: null,
+      employer: {
+        contact: formObj.name,
+        company: formObj.company,
+        email: formObj.email,
+        telphone: formObj.phone
+      }
+    };
+
+
+    $.when( addOffer(offer) ).then(
+      function( newOffer ) {
+        console.log("add offer - success response");
+        displayStatusEndFlow( $("#offerform"), 'Oferta enviada exitosamente, lo contactamos en breve. Identificador: ' + newOffer._id + '.' );
+        toggleLoading(false);
+      },
+      function( failure ) {
+        console.error("add offer - failure response::" + failure);
+        displayStatusEndFlow( $("#offerform"), 'En este momento no es posible enviar la oferta, por favor intente mas tarde.' );
+        toggleLoading(false);
+      },
+      function( notify ) {
+        console.warn("add offer - notify occurred::" + notify);
+        toggleLoading(false);
+      }
+    );
+  }
+
+  $( "input:button[name='send']" ).click( function( event ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    submitOffer();
+  });
+});
+</script>
+</head>
+<body>
+<div class="main">
+  <div class="header_resize">
+    <div class="header">
+      <div class="logo"><a href="#"><img src="images/coollogo_com-149121937.png" width="338" height="70" border="0" alt="" /></a></div>
+      <div class="menu">
+        <ul>
+          <li><a href="index.html"><span>Inicio</span></a></li>
+          <li><a href="employers.html" class="active"><span>Empleadores </span></a></li>
+          <li><a href="job-seekers.html"><span> Postulantes </span></a></li>
+          <li><a href="contact.html"><span> Contacto</span></a></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="header_blog2">
+    <div class="header">
+      <h2>Empleadores</h2>
+      <p>El activo mas importante de su empresa son sus empleados. Nosotros nos ocupamos de seleccionar de manera ágil el talento de hoy.</p>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+  <div class="body">
+    <div class="body_resize">
+      <div class="left">
+        <h2>Oferta laboral</h2>
+        <p><span><em>Breve descriptción de la oferta</em></span></p>
+        <p>Complete el siguiente formulario y uno de nuestros reclutadores se comunicará con usted en las próximas 2 horas para concretar una reunión y avanzar con el proceso.</p>
+        <form action="#" method="post" id="offerform">
+          <ol>
+            <li>
+              <label for="status"></label>
+            </li>
+            <li>
+              <label for="name"><span class="red">*</span> Nombre y apellido:</label>
+              <input id="name" name="name" class="text" />
+            </li>
+            <li>
+              <label for="company">Empresa:</label>
+              <input id="company" name="company" class="text" />
+            </li>
+            <li>
+              <label for="email"><span class="red">*</span> E-mail:</label>
+              <input id="email" name="email" class="text" />
+            </li>
+            <li>
+              <label for="phone">Teléfono:</label>
+              <input id="phone" name="phone" class="text" />
+            </li>
+            <li>
+              <label for="positions"><span class="red">*</span> Posiciones abiertas:</label>
+              <textarea id="positions" name="positions" rows="6" cols="50"></textarea>
+            </li>
+            <li class="buttons">
+              <div id="loading"><img id="loading-image" src="images/loading_main.gif" alt="Cargando..." /></div>
+              <input type="button" name="send" value="Enviar" onclick=""/>
+              <div class="clr"></div>
+            </li>
+          </ol>
+        </form>
+      </div>
+      <div class="right">
+        <h2>Servicios</h2>
+        <p><span><em>Alternativas de servicio</em></span></p>
+        <p>Proporcionamos consultoría en varios tipos de relaciones laborales.</p>
+        <p>&nbsp;</p>
+        <p><a href="#">Reclutamiento directo</a><br />
+        Búsqueda y selección de personal en 36 horas.<br /> Posiciones a cubrir: 1 a 6. 
+        </p>
+        <p><a href="#">Proyectos a corto plazo</a><br />
+        Reclutamiento de personal en un plazo estimado de 72 horas con reportes<span><em>(*)</em></span> cada 24 horas.<br /> Posiciones a cubrir: 7 a 12.    
+        </p>
+        <p><a href="#">Proyectos a largo plazo</a><br />
+        Reclutamiento de personal en un plazo estimado de 108 horas con reportes<span><em>(*)</em></span> cada 36 horas.<br />
+        Posiciones a cubrir: 13 a 18.  
+        </p>
+        <p><span><em>(*) Informes de personal seleccionado</em></span></p>
+      </div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="footer">
+    <div class="footer_resize">
+      <p class="leftt">© Copyright www.rhintegralconsulting.com.ar . Todos los derechos reservados.<br />
+      <p class="right"><a href="index.html">Inicio</a> | <a href="employers.html">Empleadores</a>| <a href="job-seekers.html">Postulantes</a>| <a href="contact.html">Contacto</a> </p></p>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+</div>
+</body>
+</html>

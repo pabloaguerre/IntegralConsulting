@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Consultoría integral en recursos humanos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.cycle.all.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#slideshow').cycle({
+        fx:     'fade',
+        speed:  'slow',
+        timeout: 3000,
+        pager:  '#slider_nav',
+        pagerAnchorBuilder: function(idx, slide) {
+            // return sel string for existing anchor
+            return '#slider_nav li:eq(' + (idx) + ') a';
+        }
+    });
+
+    function viewMore(details) {
+      var viewMoreDetails = $("#viewMoreDetails");
+      viewMoreDetails.addClass('body_bottom');
+      viewMoreDetails.addClass('body_bottom_resize');
+      viewMoreDetails.addClass('dialog');
+      viewMoreDetails.html( details );
+
+      $("#viewMoreModal").dialog({
+        open: function (evt, ui) {
+
+            // Remove focus on all buttons within the
+            // div with class ui-dialog
+            $(':focus', this).blur();
+            $( this ).scrollTop("0");
+        },
+        height: 350,
+        width: 450,
+        modal: true,
+        open: function (event, ui) {
+          $('#viewMoreModal').css('overflow', 'hidden'); // hide scrollbars
+          $("#viewMoreModal").css('', '');
+        }
+      });
+      $(".ui-dialog-titlebar").removeClass('ui-widget-header');
+    }
+
+    $("#viewVelocity").click( function( event ) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      viewMore( '<div class="block"><img src="images/logo_linkedin.jpg" alt="" width="49" height="49" /><h2>Velocidad<br /><span>Tiempo de selección estimado 36 horas</span> </h2><div class="bg"></div><p>Nuestras tecnologías se encuentran vinculadas a LinkedIn lo que disminuye el tiempo de búsqueda. <br />El trabajo de buscar, analizar y seleccionar el empleado adecuado es nuestro. </p></div>' );
+    });
+
+    $("#viewExperience").click( function( event ) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      viewMore( '<div class="block"> <h2>Experiencia<br /><span>Dominio en herramientas de reclutamiento y selección</span></h2><div class="bg"></div><p>Nuestro equipo de selectores está conformado por profesionales que poseen más de 7 años de trayectoria laboral. <br />Sólida formación incluyendo Magistratura y Licenciaturas en Psicología, RRHH e Informática. </p></div>' );
+    });
+
+    $("#viewSpecialization").click( function( event ) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      viewMore( '<div class="block"> <img src="images/logo_intel.jpg" alt="" width="49" height="49" /> <img src="images/logo_hp.jpg" alt="" width="49" height="49" /><h2>Especialización<br /><span>Distinción en consultoría IT</span></h2><div class="bg"></div><p>Nuestro personal técnico poseee experiencia de selección en Intel y Hewlett Packard. <br />Pericia en lenguajes C++, C#, Java y Java Script. Tecnologías: .Net, IIS, JEE, EJB, Spring, Hibernate, Quartz, WebSphere, Tomcat, JBoss, jQuery, YUI y NodeJS. </p></div>' );
+    });
+});
+</script>
+</head>
+<body>
+<div class="main">
+  <div class="header_resize">
+    <div class="header">
+      <div class="logo"><a href="#"><img src="images/coollogo_com-149121937.png" width="338" height="70" border="0" alt="" /></a></div>
+      <div class="menu">
+        <ul>
+          <li><a href="index.html" class="active"><span>Inicio</span></a></li>
+          <li><a href="employers.html"><span>Empleadores </span></a></li>
+          <li><a href="job-seekers.html"><span> Postulantes </span></a></li>
+          <li><a href="contact.html"><span> Contacto</span></a></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="header_blog">
+    <div id="slider">
+      <!-- start slideshow -->
+      <div id="slideshow">
+        <div class="slider-item"><div><a href="employers.html"><img src="images/employer.jpg" alt="" width="960" height="341" border="0" /><h2><span>¿Buscando contratar un empleado?</span></h2></a></div></div>
+        <div class="slider-item"><div><a href="job-seekers.html"><img src="images/job-seeker.jpg" alt="" width="960" height="341" border="0" /><h2><span>¿Buscando trabajo?</span></h2></a></div></div>
+        <div class="slider-item"><div><a href="contact.html"><img src="images/employees.jpg" alt="" width="960" height="341" border="0" /><h2><span>Todo lo que busques lo tenemos aquí.<span class='spacer'></span><br /><span class='spacer'></span> Más de 100 empleados contratados mensualmente.</span></h2></a></div></div>
+      </div>
+      <!-- end #slideshow -->
+      <div class="controls-center">
+        <div id="slider_controls">
+          <ul id="slider_nav">
+            <li><a href="#"></a></li>
+            <!-- Slide 1 -->
+            <li><a href="#"></a></li>
+            <!-- Slide 2 -->
+            <li><a href="#"></a></li>
+            <!-- Slide 3 -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+  <div class="body_bottom">
+    <div class="body_bottom_resize">
+      <div class="block"> <img src="images/logo_linkedin.jpg" alt="" width="49" height="49" />
+        <h2>Velocidad<br />
+          <span>Tiempo de selección estimado 36 horas</span> </h2>
+        <div class="bg"></div>
+        <p>Nuestras tecnologías se encuentran vinculadas a LinkedIn lo que disminuye el tiempo de búsqueda. <br />
+           El trabajo de buscar, analizar y seleccionar el empleado adecuado es nuestro. </p>
+        <a id="viewVelocity" href="#" title="Click para ver más" class="read-more">Leer Más</a> </div>
+      <div class="block"> 
+        <h2>Experiencia<br />
+          <span>Dominio en herramientas de reclutamiento y selección</span></h2>
+        <div class="bg"></div>
+        <p>Nuestro equipo de selectores está conformado por profesionales que poseen más de 7 años de trayectoria laboral. <br />
+           Sólida formación incluyendo Magistratura y Licenciaturas en Psicología, RRHH e Informática. </p>
+        <a id="viewExperience" href="#" title="Click para ver más" class="read-more">Leer Más</a> </div>
+      <div class="block"> <img src="images/logo_intel.jpg" alt="" width="49" height="49" /> <img src="images/logo_hp.jpg" alt="" width="49" height="49" />
+        <h2>Especialización<br />
+          <span>Distinción en consultoría IT</span></h2>
+        <div class="bg"></div>
+        <p>Nuestro personal técnico poseee experiencia de selección en Intel y Hewlett Packard. <br />
+           Pericia en lenguajes C++, C#, Java y Java Script. Tecnologías: .Net, IIS, JEE, EJB, Spring, Hibernate, Quartz, WebSphere, Tomcat, JBoss, jQuery, YUI y NodeJS. </p>
+        <a id="viewSpecialization" href="#" title="Click para ver más" class="read-more">Leer Más</a> </div>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+  <div class="body">
+    <div class="body_resize">
+      <div class="left">
+        <h2>Bienvenida</h2>
+        <p>Somos una empresa dedicada principalmente a la selección ágil de recursos humanos mediante el uso de tecnologías modernas y personal con experiencia.</p><br />
+        <h2>¿Qué hacemos?</h2>
+        <p><span><em>Consultoría integral en recursos humanos</em></span><br />
+          Realizamos servicios de búsqueda, evaluación y selección basándonos en una adecuada descripción de puestos, analizando y explorando en el mercado y eligiendo aquellos candidatos que ofrecen un mejor perfil en función de la cultura y valores de su organización con un tiempo de selección estimado en 36 horas.</p>
+        <p>Nuestro equipo de selección está conformado por profesionales especialistas con sólida formación profesional y dominio de diversas herramientas de reclutamiento y selección.</p>
+        <p><img src="images/test.gif" alt="" width="18" height="13" /><strong>Si necesita personal nuevo y no posee tiempo, no dude en contactarnos, en 36 horas conseguimos el candidato adecuado. Ofrecemos importantes descuentos dependiendo de la cantidad de puestos y clientes frecuentes.</strong></p>
+      </div>
+      <div class="right">
+        <p><a href="#">Espacio físico y virtual</a><br />
+          Proporcionamos instalaciones para efectuar entrevistas de preseleccionados. En caso necesario éstas pueden ser realizadas de manera virtual mediante el uso de nuestras tecnologías.</p>
+        <p><a href="#">Herramientas</a><br />
+          Realización de entrevistas individuales y grupales (assessment centers). Gestión de todos los exámenes preocupacionales necesarios incluyendo evaluaciones psicotécnicas, ambientales, de antecedentes comerciales y exámenes médicos. Uso de tecnologías y redes sociales vinculadas como LinkedIn para la búsqueda de personal y publicación de avisos a nivel nacional y local. </p>
+        <p><a href="#">Garantía</a><br />
+          En caso de que el candidato elegido y contratado no permanezca en la empresa antes de cumplirse el primer mes, la reposición será concedida sin costo adicional.</p>
+      </div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="footer">
+    <div class="footer_resize">
+      <p class="leftt">© Copyright www.rhintegralconsulting.com.ar . Todos los derechos reservados.<br />
+      <p class="right"><a href="index.html">Inicio</a> | <a href="employers.html">Empleadores</a>| <a href="job-seekers.html">Postulantes</a>| <a href="contact.html">Contacto</a> </p></p>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div id="viewMoreModal"><div id="viewMoreDetails"></div></div>
+</div>
+</body>
+</html>

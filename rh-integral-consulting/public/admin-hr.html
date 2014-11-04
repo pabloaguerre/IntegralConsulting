@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Consultoría Integral en Recursos Humanos --> | Admin HR</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery-browser.min.js"></script>
+<script type="text/javascript" src="js/custom/rest-client.js"></script>
+<script type="text/javascript" src="js/custom/utils.js"></script>
+<style>
+.error-message { 
+	color: red; 
+}
+.read-only-input {
+	background-color: #D3D3D3;
+}
+.show {
+	display: inline; 
+}
+.hide {
+	display: none;
+}
+.main {
+	background: #247ca4; 
+	font: normal 12px Arial, Helvetica, sans-serif;
+}
+
+/*loading*/
+#loading {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  top: 65px;
+  left: 225px;
+  z-index: 100;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function() {
+	toggleLoading(false);
+
+	function submitQuery() {
+		var formObj = serializeObject($("#queryform"));
+		console.log(formObj);
+		var queryType = formObj.type;
+
+		toggleLoading(true);
+		$.when( getQueryMethod(queryType)() ).then(
+		  function( data ) {
+		    console.log("find all - success response");
+		    console.log(data);
+
+		    var dataSet = buildDataSet(queryType, data);
+		    var columns = getColumns(queryType);
+
+		    $("#queryResults").empty();
+			$("#queryResults").dataTable( {
+				"data": dataSet,
+		        "columns": columns,
+		        "order": [[ 0, "desc" ]],
+		        "language": getTableLanguage(),
+				paging: true,
+				searching: true,
+				ordering: true,
+				info: true,
+				processing: true,
+				scrollY: 350,
+				"bDestroy": true
+			});
+			toggleLoading(false);
+		  },
+		  function( failure ) {
+		    console.error("find all - failure response::" + failure);
+		    toggleLoading(false);
+		  },
+		  function( notify ) {
+		    console.warn("find all - notify occurred::" + notify);
+		    toggleLoading(false);
+		  }
+		);
+	}
+
+	$( "input:button[name='sendQuery']" ).click( function( event ) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		submitQuery();
+	});
+});
+</script>
+</head>
+<body class="main">
+<div>
+    <h2>Administrador <!--- Recursos Humanos --></h2>
+	<form action="#" method="post" id="queryform">
+  		<select name="type" id="type">
+  			<optgroup label="Principal">
+    			<option value="offers">Offertas</option>
+    			<option value="job-applications">Solicitudes</option>
+  			</optgroup>
+  			<optgroup label="Contacto">
+    			<option value="messages">Mensajes</option>
+  			</optgroup>
+  		</select>
+  		<input type="button" name="sendQuery" value="Consultar" onclick=""/>
+  		<div id="loading"><img id="loading-image" src="images/loading_secondary.gif" alt="Cargando..." /></div>
+	</form>
+</div>
+<p>&nbsp;</p>
+<table id='queryResults' class="display" cellspacing="0" width="100%">
+</table>
+<div id='detailsModal' title="Detalle"><form action="#" method="post" id="datailsform"></form></div>
+<div id='updateModal' title="Resultado" class="hide"><p>Guardado exitoso.</p></div>
+<div id='removeModal' title="Resultado" class="hide"><p>Eliminación exitosa.</p></div>
+<script type="text/javascript">
+// Don't wait for document ready
+function viewDetails(queryType, itemId) {
+	var details = '';
+
+	function isIE() {
+	    return $.browser.name == 'msie';
+	}
+
+	function isTextArea(propName) {
+	    return propName && ( propName == 'message' || propName == 'description' );
+	}
+
+	function isDisable(propName) {
+	    return propName && ( propName == '_id' || propName == 'date' );
+	}
+
+	function isCV(propName) {
+	    return propName && propName == 'cv';
+	}
+
+	function buildDownloadLink(propName, val) {
+		if(!isIE()) {
+			details += '<a href="';
+			val ? details += val : null;
+			details += '" title="Click para descargar">Descargar</a><input id="'; 
+			details += propName; 
+			details += '" name="';
+			details += propName;
+			details += '" type="hidden" value="';
+			val ? details += val : null;
+			details += '"/>';
+		} else {
+			details += '<div class="error-message">IE no soporta la descarga de archivos! Navegadores sugeridos: Firefox 3.6+ o Chrome 7+</div>';
+		}
+	}
+
+	function buildDetailsRow(parentPropName, propName, val) {
+		parentPropName ? details += translateProperty(parentPropName) + ' ' : null;
+		details += translateProperty(propName);
+		details += ': ';
+		if (!isCV(propName)) {
+			isTextArea(propName) ? details += '<textarea id="' : details += '<input id="';
+			parentPropName ? details += parentPropName : null;
+			details += propName;
+			details += '" name="';
+			parentPropName ? details += parentPropName : null;
+			details += propName;
+			isTextArea(propName) ? details += '" rows="7" cols="70">' + ( val ? val : '' ) + '</textarea>' : details += '" type="text" size="60" value="' + ( val ? val : '' ) + '"';
+			!isTextArea(propName) ? ( isDisable(propName) ? details += 'class="read-only-input" readonly' : null ) : null;
+			!isTextArea(propName) ? details += '/>' : null;
+		} else buildDownloadLink(propName, val);
+		details += '<br>';
+	}
+
+	function loopThroughProperties(obj, parentPropName) {
+	    for (var propName in obj) {
+	    	var val = obj[propName];
+	    	if (!val) {
+	    		buildDetailsRow(parentPropName, propName, val);
+	    	} else {
+	    		typeof val == "object" ? loopThroughProperties(val, propName) : buildDetailsRow(parentPropName, propName, val);
+	    	}
+	    }
+	}
+
+	function getModalHeigth(queryType) {
+		var hmap = [];
+		hmap[OFFERS_TYPE] = 650;
+		hmap[JOB_APPLICATIONS_TYPE] = 300;
+		hmap[MESSAGES_TYPE] = 400;
+		return hmap[queryType];
+	}
+
+	function getJsonObj(queryType) {
+		var formObj = serializeObject($("#datailsform"));	
+
+		function getOfferObj(formObj) {
+			if (formObj) {
+				var employer = {
+					contact: null,
+					company: null,
+					email: null,
+					telphone: null
+				}
+				formObj.employercontact ? employer.contact = formObj.employercontact : null;
+				formObj.employercompany ? employer.company = formObj.employercompany : null;
+				formObj.employeremail ? employer.email = formObj.employeremail : null;
+				formObj.employertelphone ? employer.telphone = formObj.employertelphone : null;
+				formObj['employer'] = employer;
+				delete formObj.employercontact;
+				delete formObj.employercompany;
+				delete formObj.employeremail;
+				delete formObj.employertelphone;
+			}
+			return formObj;
+		}
+
+		function getJobApplicationObj(formObj) {
+			return formObj;
+		}
+
+		function getMessageObj(formObj) {
+			return formObj;
+		}
+
+		var objMap = [];
+		objMap[OFFERS_TYPE] = getOfferObj;
+		objMap[JOB_APPLICATIONS_TYPE] = getJobApplicationObj;
+		objMap[MESSAGES_TYPE] = getMessageObj;
+
+		return objMap[queryType](formObj);
+	}
+
+	function getRemoveId(jsonObj) {
+		var rv = '';
+		if (jsonObj && jsonObj._id) {
+			rv = jsonObj._id;
+			delete jsonObj._id;
+		}
+		return rv;
+	}
+
+	function toggleResults(modalObj, val) {
+		val ? modalObj.removeClass('hide') : modalObj.addClass('hide');
+		val ? modalObj.addClass('show') : modalObj.removeClass('show');
+	}
+
+	function showResultsDialog(modalId) {
+		var modalObj = $( modalId );
+		toggleResults(modalObj, true);
+		modalObj.dialog({
+			height: 300,
+			width: 500,
+			modal: true,
+			buttons: {
+				"Cerrar": function() {
+					$( this ).dialog( "close" );
+					toggleResults(modalObj, false);
+				}
+			}
+		});
+		
+	}
+
+	function updateDetails(queryType, modal) {
+		var jsonObj = getJsonObj(queryType);
+		var id = getRemoveId(jsonObj);
+		$.when( updateById(queryType, id, jsonObj) ).then(
+			function( data ) {
+				console.log("update by id - success response");
+				console.log(data);
+				modal.dialog( "close" );
+
+				showResultsDialog('#updateModal');
+			},
+			function( failure ) {
+				console.error("update by id - failure response::" + failure);
+			},
+			function( notify ) {
+				console.warn("update by id - notify occurred::" + notify);
+			}
+		);
+	}
+
+	function removeDetails(queryType, modal) {
+		var jsonObj = getJsonObj(queryType);
+		var id = getRemoveId(jsonObj);
+		$.when( removeById(queryType, id) ).then(
+			function( data ) {
+				console.log("remove by id - success response");
+				console.log(data);
+				modal.dialog( "close" );
+
+				showResultsDialog('#removeModal');
+			},
+			function( failure ) {
+				console.error("remove by id - failure response::" + failure);
+			},
+			function( notify ) {
+				console.warn("remove by id - notify occurred::" + notify);
+			}
+		);
+	}
+
+	$.when( findById( queryType, itemId ) ).then(
+		function( data ) {
+			console.log("find by id - success response");
+			loopThroughProperties(data);
+
+			$( "#datailsform" ).html( details );
+
+			$( "#detailsModal" ).dialog({
+				height: getModalHeigth(queryType),
+				width: 1000,
+				modal: true,
+				buttons: {
+					"Guardar": function() {	
+						var modal = $( this );
+						updateDetails(queryType, modal);
+					},
+					"Eliminar": function() {
+						var modal = $( this );
+						removeDetails(queryType, modal);
+					},
+					"Cancelar": function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		},
+		function( failure ) {
+			console.error("find by id - failure response::" + failure);
+		},
+		function( notify ) {
+			console.warn("find by id - notify occurred::" + notify);
+		}
+	);
+}
+</script>
+</body>
+</html>

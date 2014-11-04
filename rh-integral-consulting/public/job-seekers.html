@@ -1,0 +1,389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Consultoría Integral en Recursos Humanos | About</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.cycle.all.min.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/custom/rest-client.js"></script>
+<script type="text/javascript" src="js/custom/utils.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  toggleLoading(false);
+  toggleOffersPanel(false);
+
+  var offersData = null;
+  function loadOffers() {
+    toggleLoading(true);
+    offersData = null;
+
+    $.when( findOffers() ).then(
+      function( offers ) {
+        console.log("load offers - success response");
+        offersData = offers; // All offers reference to be displayed later
+
+        var htmlContent = "";
+        var groupsLength = 5;
+        var laps = Math.floor(offers.length / groupsLength);
+        for (var i = 0; i < laps; i++){
+            htmlContent += '<div id="offergroup' + i + '" class="offers-group">';
+            for (var j = i * groupsLength; j < ((i * groupsLength) + groupsLength); j++){
+              htmlContent += '<div><a id="' + offers[j]._id + '" title="Click para leer más" href="#" onclick="viewDetails(\'' + OFFERS_TYPE + '\',\'' + offers[j]._id + '\');return false;">' + offers[j].position + ' [Leer más]</a></div><p>&nbsp;</p>';
+            }
+            htmlContent += '</div>';
+        }
+        $('#offershow').html(htmlContent);
+        toggleLoading(false);
+
+        $('#offershow').cycle({ 
+          fx:     'fadeZoom', 
+          speed:  'slow',
+          timeout: 6000
+        });
+      },
+      function( failure ) {
+        console.error("load offers - failure response::" + failure);
+        toggleLoading(false);
+      },
+      function( notify ) {
+        console.warn("load offers - notify occurred::" + notify);
+        toggleLoading(false);
+      }
+    );    
+  }
+
+  loadOffers();
+
+  var cvData = null;
+  function loadFile(file) {
+    cvData = null;
+    if (typeof window.FileReader !== 'function') {
+      alert("Su Navegador no soporta la carga de archivos! Navegadores sugeridos: Firefox 3.6+, Chrome 7+ o IE10+");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      cvData = e.target.result;
+      //console.log(cvData); // IE not supported
+    };
+    reader.onerror = function(e) {
+      console.error('Error en la carga del archivo');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  var cvFile = null;
+  $( "input:file[name='cv']" ).change(function(e) {
+    cvFile = null;
+    var files = e.target.files; 
+    for (var i = 0, file; file = files[i]; i++) {
+      cvFile = file;
+      console.log(cvFile);
+      if(isValidCVFile(cvFile)) { 
+        loadFile(cvFile);
+      }
+    }
+  });
+
+  function isValidCVFile(file) {
+    if(!file || !file.type || !file.type.match( '/pdf|word|text/' )) {
+      displayStatusMessge('C. V. no posee un formato admitido (pdf, texto plano o word).');
+      return false;
+    }
+    if(!file.size || file.size < ( 3 * 1024 ) || file.size > ( 15 * 1024 * 1024 )) {
+      displayStatusMessge('C. V. no posee un tamaño adecuado (3KB - 15MB).'); 
+      return false;
+    }
+    displayStatusMessge('');
+    return true;
+  }
+
+  function isValidCVData(fileData) {
+    if(!fileData) {
+      displayStatusMessge('Carga de C. V. en proceso, por favor espere un momento ...'); 
+      return false;
+    } 
+    displayStatusMessge('');
+    return true;
+  }
+
+  function isValidCV(file, fileData) {
+    return isValidCVFile(file) && isValidCVData(fileData);
+  }
+
+  function isValidCvform(formObj) {
+    var rv = true;
+    var args = [];
+    if (formObj.name.trim().length == 0) args[args.length] = 'Nombre y apellido';
+    if (formObj.email.trim().length == 0) args[args.length] = 'E-mail';
+    if (!cvFile || !cvFile.size || cvFile.size == 0) args[args.length] = 'Adjuntar C. V.';
+    if (formObj.positions.trim().length == 0) args[args.length] = 'Posiciónes a las cuáles se postula';
+    if (args.length > 0) {
+      displayStatusMessgeRequired(args);
+      rv = false;
+    }
+    return rv;
+  }
+
+  function submitCV() {
+    var formObj = serializeObject($("#cvform"));
+    if (!isValidCvform(formObj) || !isValidEmail(formObj) || !isValidCV(cvFile, cvData)) return;
+
+    toggleLoading(true);
+    var jobApplication = { 
+      jobSeeker: formObj.name,
+      email: formObj.email,
+      phone: formObj.phone,
+      cv: cvData,
+      positions: formObj.positions,
+      date: new Date()
+    };
+
+    $.when( addJobApplication(jobApplication) ).then(
+      function( newJobApplication ) {
+        console.log("add job-application - success response");
+        displayStatusEndFlow( $("#cvform"), 'Solicitud enviada exitosamente, lo contactamos en breve. Identificador: ' + newJobApplication._id + '.' );
+        toggleLoading(false);
+      },
+      function( failure ) {
+        console.error("add job-application - failure response::" + failure);
+        displayStatusEndFlow( $("#cvform"), 'En este momento no es posible enviar la solicitud, por favor intente mas tarde.' );
+        toggleLoading(false);
+      },
+      function( notify ) {
+        console.warn("add job-application - notify occurred::" + notify);
+        toggleLoading(false);
+      }
+    );
+  }
+
+  $( "input:button[name='send']" ).click( function( event ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    submitCV();
+  });
+
+  function viewAllOffers() {
+    if(!offersData) {
+      consle.error("Offers data unavailable!");
+      return;
+    }
+
+    toggleOffersPanel(true);
+    var dataSet = buildDataSet(OFFERS_SUMMARY_TYPE, offersData);
+    var columns = getColumns(OFFERS_SUMMARY_TYPE);
+
+    $("#allOffersResults").empty();
+    $("#allOffersResults").dataTable( {
+      "data": dataSet,
+          "columns": columns,
+          "order": [[ 0, "desc" ]],
+          "language": getTableLanguage(),
+      paging: true,
+      searching: true,
+      ordering: true,
+      info: true,
+      processing: true,
+      scrollY: 350,
+      "bDestroy": true
+    }); 
+  }
+
+  $("#viewAllOffers").click( function( event ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    viewAllOffers();
+  });
+});
+</script>
+</head>
+<body>
+<div class="main">
+  <div class="header_resize">
+    <div class="header">
+      <div class="logo"><a href="#"><img src="images/coollogo_com-149121937.png" width="338" height="70" border="0" alt="" /></a></div>
+      <div class="menu">
+        <ul>
+          <li><a href="index.html"><span>Inicio</span></a></li>
+          <li><a href="employers.html"><span>Empleadores </span></a></li>
+          <li><a href="job-seekers.html" class="active"><span> Postulantes </span></a></li>
+          <li><a href="contact.html"><span> Contacto</span></a></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
+      <div class="clr"></div>
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="header_blog2">
+    <div class="header">
+      <h2>Postulantes</h2>
+      <p>Averigua qué es lo que haces mejor y consigue a alguien que te pague por ello.
+        Nosotros encontramos la empresa adecuada para vos.</p>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div class="clr"></div>
+  <div class="body">
+    <div class="body_resize">
+      <div id="leftPanel" class="left">
+        <h2>Solicitud laboral</h2>
+        <p><span><em>Breve descriptción de la solicitud</em></span></p>
+        <p>Complete el siguiente formulario y uno de nuestros reclutadores se comunicará con usted en las próximas 2 horas para iniciar el proceso de selección.</p>
+        <form action="#" method="post" id="cvform">
+          <ol>
+            <li>
+              <label for="status"></label>
+            </li>
+            <li>
+              <label for="name"><span class="red">*</span> Nombre y apellido:</label>
+              <input id="name" name="name" class="text" />
+            </li>
+            <li>
+              <label for="email"><span class="red">*</span> E-mail:</label>
+              <input id="email" name="email" class="text" />
+            </li>
+            <li>
+              <label for="phone">Teléfono:</label>
+              <input id="phone" name="phone" class="text" />
+            </li>
+            <li>
+              <label for="cv"><span class="red">*</span> Adjuntar C. V. :</label>
+              <input id="cv" name="cv" type="file" class="file"/>
+            </li>
+            <li>
+              <label for="positions"><span class="red">*</span> Posiciónes a las cuáles se postula:</label>
+              <textarea id="positions" name="positions" rows="5" cols="50"></textarea>
+            </li>
+            <li class="buttons">
+              <div id="loading"><img id="loading-image" src="images/loading_main.gif" alt="Cargando..." /></div>
+              <input type="button" name="send" value="Enviar" onclick=""/>
+              <div class="clr"></div>
+            </li>
+          </ol>
+        </form>
+      </div>
+      <div id="rightPanel" class="right">
+        <h2>Ofertas en curso</h2>
+        <p><span><em>Vacantes laborales</em></span></p>
+        <p>Posiciones abiertas actualizadas cada 24 horas.</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <div id="offershow">
+        </div>
+        <a id="viewAllOffers" href="#" title="Click para ver todas las ofertas" class="view-offers">Ver todas las Ofertas</a>
+      </div>
+      <div id="allOffersPanel" class="all-offers">
+        <h2>Ofertas en curso</h2>
+        <p><span><em>Vacantes laborales</em></span></p>
+        <p>Posiciones abiertas actualizadas cada 24 horas.</p>
+        <p>&nbsp;</p>
+        <table id='allOffersResults' class="display" cellspacing="0" width="100%">
+        </table>
+      </div>
+    </div>
+    <div class="clr">
+    </div>
+  </div>
+  <div class="clr"></div>
+  <div class="footer">
+    <div class="footer_resize">
+      <p class="leftt">© Copyright www.rhintegralconsulting.com.ar . Todos los derechos reservados.<br />
+      <p class="right"><a href="index.html">Inicio</a> | <a href="employers.html">Empleadores</a>| <a href="job-seekers.html">Postulantes</a>| <a href="contact.html">Contacto</a> </p></p>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div>
+  </div>
+  <div id="offerDetailsModal"><div id="offerDetails"></div></div>
+</div>
+<script type="text/javascript">
+// Don't wait for document ready
+function viewDetails(queryType, itemId) {
+  var details = '';
+
+  function isHide(parentPropName, propName) {
+    return (parentPropName && parentPropName == 'employer') || (propName && propName == 'employerRefCode');
+  }
+
+  function buildDetailsRow(parentPropName, propName, val) {
+    if( !isHide(parentPropName, propName) )  {
+      details += '<p><span>';
+      !isHide(parentPropName) ? ( parentPropName ? details += translateProperty(parentPropName) + ' ' : null ) : null;
+      details += translateProperty(propName);
+      details += ':</span> ';
+      val ? details += val : details += 'No disponible';
+      details += '</p>';
+    }
+  }
+
+  function loopThroughProperties(obj, parentPropName) {
+      for (var propName in obj) {
+        var val = obj[propName];
+        if (!val) {
+          buildDetailsRow(parentPropName, propName, val);
+        } else {
+          typeof val == "object" ? loopThroughProperties(val, propName) : buildDetailsRow(parentPropName, propName, val);
+        }
+      }
+  }
+
+  function buildAhrefApplyOffer(){
+    details += '<p><a id="applyButton" href="#" title="Click para aplicar a la oferta" class="apply-offer">Aplicar a la Oferta</a></p>';
+  }
+
+  function applyOffer(position) {
+    $("#applyButton").click( function( event ) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      toggleOffersPanel(false);
+      $("#positions").val(position);
+      $("#offerDetailsModal").dialog( "close" );
+    });
+  }
+
+  $.when( findById( queryType, itemId ) ).then(
+    function( data ) {
+      console.log("find by id - success response");
+      loopThroughProperties( data );
+      data.position ? buildAhrefApplyOffer() : null;
+
+      var offerDetails = $("#offerDetails");
+      offerDetails.addClass('body');
+      offerDetails.addClass('body_resize');
+      offerDetails.addClass('dialog');
+      offerDetails.html( details );
+
+      $("#offerDetailsModal").dialog({
+        open: function (evt, ui) {
+
+            // Remove focus on all buttons within the
+            // div with class ui-dialog
+            $(':focus', this).blur();
+            $( this ).scrollTop("0");
+        },
+        height: 500,
+        width: 800,
+        modal: true
+      });
+      $(".ui-dialog-titlebar").removeClass('ui-widget-header');
+      data.position ? applyOffer( data.position ) : null;
+    },
+    function( failure ) {
+      console.error("find by id - failure response::" + failure);
+    },
+    function( notify ) {
+      console.warn("find by id - notify occurred::" + notify);
+    }
+  );
+}
+</script>
+</body>
+</html>
