@@ -9,7 +9,7 @@ var COLLECTION_OFFERS = 'offers';
 var COLLECTION_JOB_APPLICATIONS = 'job-applications';
 var COLLECTION_MESSAGES = 'messages';
  
-var server = new Server('10.240.212.53', 80, {auto_reconnect: true});
+var server = new Server('10.240.255.213', 8888, {auto_reconnect: true});
 db = new Db(DB_RH_INTEGRAL_CONSULTING, server);
  
 // connection
