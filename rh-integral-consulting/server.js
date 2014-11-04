@@ -33,6 +33,6 @@ app.post('/messages', dbMngr.addMessage);
 app.put('/messages/:id', dbMngr.updateMessage);
 app.delete('/messages/:id', dbMngr.removeMessage);
 
-http.createServer(app).listen(app.get('port'), '10.240.255.213', function () {
+http.createServer(app).listen(app.get('port'), '127.0.0.1', function () {
     console.log("Express server listening on port " + app.get('port'));
 });
