@@ -1,4 +1,4 @@
-var SERVER_URI = 'http://10.240.167.82:8080/',
+var SERVER_URI = 'http://localhost:8888/',
 OFFERS_TYPE = 'offers',
 JOB_APPLICATIONS_TYPE = 'job-applications',
 MESSAGES_TYPE = 'messages',
