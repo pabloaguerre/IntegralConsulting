@@ -122,7 +122,7 @@ var populateOffers = function() {
 						contact: "Selectores",
 						telphone: "(+54 9 0351) 15 393-3182",
 						email: "rhintegralconsulting@gmail.com",
-						description: "<br>Seleccionamos para importante corporación. \n<br>Perfil General: Desarrollador\n<br>\n<br>- 5 años de experiencia demostrable en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>Java (requerido)\n<br>Jscript (deseable)\n<br>- Conocimiento en protocolo de comunicaciones.\n<br>- Manejos de Tecnologías y herramientas de diagnóstico (UML, POO, Enterprise Architect)\n<br>- Programación bajo Eclipse.\n<br>- Capacidad de trabajar con ambientes integrados (SVN, DOORS, Tracker de bugs, HUDSON)\n<br>- Sistemas operativos: Windows, LINUX (kernel y versiones)\n<br>- Interacción para el trabajo en equipo.\n<br>- Inglés oral y escrito (lectura y escritura de documentos técnicos).\n<br>- Manejo de programación en tiempo real.\n<br>- Disponibilidad para viajar dentro y fuera del país.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: atencion@rhintegralconsulting.com.ar",
+						description: "<br>Seleccionamos para importante corporación. \n<br>Perfil General: Desarrollador\n<br>\n<br>- 5 años de experiencia demostrable en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>Java (requerido)\n<br>Jscript (deseable)\n<br>- Conocimiento en protocolo de comunicaciones.\n<br>- Manejos de Tecnologías y herramientas de diagnóstico (UML, POO, Enterprise Architect)\n<br>- Programación bajo Eclipse.\n<br>- Capacidad de trabajar con ambientes integrados (SVN, DOORS, Tracker de bugs, HUDSON)\n<br>- Sistemas operativos: Windows, LINUX (kernel y versiones)\n<br>- Interacción para el trabajo en equipo.\n<br>- Inglés oral y escrito (lectura y escritura de documentos técnicos).\n<br>- Manejo de programación en tiempo real.\n<br>- Disponibilidad para viajar dentro y fuera del país.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: rhintegralconsulting@gmail.com",
 						employer: {
 							contact: "Pablo Aguerre",
 							company: "Hewlett Packard",
@@ -143,7 +143,7 @@ var populateOffers = function() {
 						contact: "Selectores",
 						telphone: "(+54 9 0351) 15 393-3182",
 						email: "rhintegralconsulting@gmail.com",
-						description: "<br>Seleccionamos para importante multinacional. \n<br>Perfil General: Programador\n<br>\n<br>- 5 años de experiencia demostrable en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>C++ (requerido)\n<br>C# (deseable)\n<br>- Conocimiento en RPC.\n<br>- Programación bajo VS.\n<br>- Capacidad de trabajar con ambientes integrados (SVN, AccuRev, JIRA, Bamboo)\n<br>- Sistemas operativos: Windows 8.0, 8.1\n<br>- Interacción para el trabajo en equipo.\n<br>- Inglés oral y escrito (lectura y escritura de documentos técnicos).\n<br>- Manejo de programación en tiempo real.\n<br>- Disponibilidad para viajar dentro y fuera del país.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: atencion@rhintegralconsulting.com.ar",
+						description: "<br>Seleccionamos para importante multinacional. \n<br>Perfil General: Programador\n<br>\n<br>- 5 años de experiencia demostrable en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>C++ (requerido)\n<br>C# (deseable)\n<br>- Conocimiento en RPC.\n<br>- Programación bajo VS.\n<br>- Capacidad de trabajar con ambientes integrados (SVN, AccuRev, JIRA, Bamboo)\n<br>- Sistemas operativos: Windows 8.0, 8.1\n<br>- Interacción para el trabajo en equipo.\n<br>- Inglés oral y escrito (lectura y escritura de documentos técnicos).\n<br>- Manejo de programación en tiempo real.\n<br>- Disponibilidad para viajar dentro y fuera del país.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: rhintegralconsulting@gmail.com",
 						employer: {
 							contact: "Pablo Aguerre",
 							company: "Intel",
@@ -164,7 +164,7 @@ var populateOffers = function() {
 						contact: "Selectores",
 						telphone: "(+54 9 0351) 15 393-3182",
 						email: "rhintegralconsulting@gmail.com",
-						description: "<br>Seleccionamos para importante empresa local. \n<br>Perfil General: Programador\n<br>\n<br>- 0-2 años de experiencia en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>PL-SQL (requerido)\n<br>SQL (deseable)\n<br>- Interacción para el trabajo en equipo.\n<br>- Manejo de programación en tiempo real.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: atencion@rhintegralconsulting.com.ar",
+						description: "<br>Seleccionamos para importante empresa local. \n<br>Perfil General: Programador\n<br>\n<br>- 0-2 años de experiencia en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>PL-SQL (requerido)\n<br>SQL (deseable)\n<br>- Interacción para el trabajo en equipo.\n<br>- Manejo de programación en tiempo real.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: rhintegralconsulting@gmail.com",
 						employer: {
 							contact: "Pablo Aguerre",
 							company: "Harriage",
@@ -185,7 +185,7 @@ var populateOffers = function() {
 						contact: "Selectores",
 						telphone: "(+54 9 0351) 15 393-3182",
 						email: "rhintegralconsulting@gmail.com",
-						description: "<br>Seleccionamos para importante empresa local. \n<br>Perfil General: Programador BD\n<br>\n<br>- 3-5 años de experiencia en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>SQL (requerido)\n<br>PL-SQL (deseable)\n<br>- Interacción para el trabajo en equipo.\n<br>- Manejo de programación en tiempo real.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: atencion@rhintegralconsulting.com.ar",
+						description: "<br>Seleccionamos para importante empresa local. \n<br>Perfil General: Programador BD\n<br>\n<br>- 3-5 años de experiencia en desarrollo y programación en base a los siguientes\n<br>Lenguajes: \n<br>SQL (requerido)\n<br>PL-SQL (deseable)\n<br>- Interacción para el trabajo en equipo.\n<br>- Manejo de programación en tiempo real.\n<br>Los interesados deberán enviar cv indicando remuneración pretendida e indicando al puesto que se postula. CV: rhintegralconsulting@gmail.com",
 						employer: {
 							contact: "Pablo Aguerre",
 							company: "Vates S. A.",
