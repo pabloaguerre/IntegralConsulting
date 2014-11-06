@@ -1,4 +1,4 @@
-var SERVER_URI = 'http://146.148.76.138:8080/',
+var SERVER_URI = 'http://146.148.76.138:80/',
 OFFERS_TYPE = 'offers',
 JOB_APPLICATIONS_TYPE = 'job-applications',
 MESSAGES_TYPE = 'messages',

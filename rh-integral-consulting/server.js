@@ -7,7 +7,7 @@ var express = require('express'),
 var app = express();
 
 app.configure(function () {
-	app.set('port', process.env.PORT || 8080);
+	app.set('port', process.env.PORT || 80);
 	app.use(express.logger('dev')); // 'default', 'short', 'tiny', 'dev' 
 	app.use(express.json({limit: JSON_LIMIT})); // limit above body parser always
 	app.use(express.urlencoded({limit: JSON_LIMIT}));
